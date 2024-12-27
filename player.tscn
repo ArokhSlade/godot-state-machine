@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://defag7olafn8y"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_okp1v"]
+[ext_resource type="PackedScene" uid="uid://djd48woucl8y8" path="res://state_machine.tscn" id="2_eth04"]
+[ext_resource type="Texture2D" uid="uid://cvk24grbtri8l" path="res://icon.svg" id="3_ecl84"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ittik"]
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_okp1v")
+
+[node name="StateMachine" parent="." instance=ExtResource("2_eth04")]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.265625, 0.359375)
+texture = ExtResource("3_ecl84")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(1, 1)
+shape = SubResource("CapsuleShape2D_ittik")
+
+[node name="StateLabel" type="Label" parent="."]
+offset_left = -58.0
+offset_top = -52.0
+offset_right = 56.0
+offset_bottom = -29.0
+text = "State"
+horizontal_alignment = 1

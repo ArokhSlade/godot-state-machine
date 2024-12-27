@@ -1,0 +1,66 @@
+State Machine Notes
+
+2024 12 25
+
+if in idle and move input is pressed, i want to change state to move and also execute move action this frame
+
+but when in move and move input is pressed, i want to simply execute move action
+
+when in move and no input, i dont want to move, i want to stop, velocity.x = 0.0
+
+frame process:
+- current state + input = new state
+- execute new state
+
+
+TODO:
+2024 12 25
+- where should velocity.x = 0.0 go, when player stops moving?
+- not happy with how exit_state() is hidden within tansition()
+ - i want it to be obvious from the super class where it's called, 
+ - and perhaps called always, even if it does nothing (hopefully the engine optimizes empty function calls away)
+
+
+looked into distinction between mealy and moore machines:	
+mealy : state x input -> state’
+moore: state -> state’
+what about inputs in moore machines?
+i almost had it.
+there needs to be an additional concept to that of state and input and transition
+for there to be room for a meaningful distinction.
+that additional concept is „output“.
+output is what the program computes.
+and this was what i was confused about.
+i was thinking that the current state was the „meaning“ of the process
+of a state machine at a given time. 
+but i was also seeing that different things are computed, which may or may not be 
+considered part of a state.
+i think in a game i have a mealy machine. because i consider states to be a relatively 
+coarse distinction of things like „walking“, „standing“, „falling“.
+whereas the individual position i consider both part of the input as well as part of the output,
+but not part of the state.
+so, multiple „results“ (locations) may be associated with the same state (e.g. running),
+but also, locations are considered part of the input (in additoin to controller inputs).
+if my game was a moore automaton,
+my state would tell where my player was.
+my input would only need to be the controller input, then. because current position plus controller input plus current „motion state“
+would suffice to tell the new state, which again would be a combination, i.e. an element in the cross product
+of the set of motion states and world positions.
+however, both automatons would agree, that, if i’m standing in this state, and pressing right,
+then in the next state, both my position and my motion state would have changed
+to old position plus x, and „walking“.
+it’s just that with mealy, position would be considered part of the „output“ as well as part of 
+the new state,
+whereas with moore, position would be considered part of the output only, but state would only 
+codify the motion state.
+even so, i think we're free to think of the game as a whole, or even just the player controller, as a moore machine.
+it's just that the state machine pattern, as an abstraction that does not consider the whole game
+ state, or even the whole state of the player controller as "state", contradicts the moore concept,
+ so long as i choose to consider the "state" data structure as equivalent with the "state" concept
+ in these computation models. 
+ which i don't think is necessary. it's a decision.
+ to me it's more of a "two things with the same name" kind of thing, where i can choose
+ to interpret one thing in terms of the other, and having multiple interpretations to choose from,
+ where on of them maps to a direct match and the other to more of a correspondence.
+ interpretation 1: model state = State data structure
+ interpretation 2: model state = all the relevant data in memory pertaining to the player controller
